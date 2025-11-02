@@ -1,0 +1,63 @@
+# 博客文章分类配置
+# 定义三级分类结构
+
+categories:
+  # 一级分类：个人日记
+  - id: personal-diary
+    name: "个人日记"
+    icon: "fas fa-book"
+    description: "记录日常生活的点滴"
+    subcategories:
+      - id: daily-life
+        name: "日常生活"
+      - id: thoughts
+        name: "随想感悟"
+      - id: reading-notes
+        name: "读书笔记"
+  
+  # 一级分类：工作记录
+  - id: work-notes
+    name: "工作记录"
+    icon: "fas fa-briefcase"
+    description: "工作中的经验总结和问题记录"
+    subcategories:
+      - id: project-summary
+        name: "项目总结"
+      - id: problem-solving
+        name: "问题解决"
+      - id: team-collaboration
+        name: "团队协作"
+      - id: meeting-notes
+        name: "会议记录"
+  
+  # 一级分类：技术文章
+  - id: tech-articles
+    name: "技术文章"
+    icon: "fas fa-code"
+    description: "技术深度文章和学习笔记"
+    subcategories:
+      - id: algorithms
+        name: "算法与数据结构"
+      - id: autonomous-driving
+        name: "自动驾驶"
+      - id: robotics
+        name: "机器人学"
+      - id: ml-ai
+        name: "机器学习与AI"
+      - id: system-design
+        name: "系统设计"
+      - id: tools-tutorials
+        name: "工具与教程"
+  
+  # 一级分类：随想杂谈
+  - id: random-thoughts
+    name: "随想杂谈"
+    icon: "fas fa-lightbulb"
+    description: "技术之外的思考和感悟"
+    subcategories:
+      - id: tech-trends
+        name: "技术趋势"
+      - id: career-development
+        name: "职业发展"
+      - id: life-philosophy
+        name: "生活哲学"

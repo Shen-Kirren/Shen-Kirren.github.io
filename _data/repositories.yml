@@ -1,0 +1,36 @@
+# 热点代码仓库配置
+# 这些仓库会在首页展示
+
+repositories:
+  - name: "自动驾驶路径规划算法"
+    url: "https://github.com/Shen-Kirren/path-planning"
+    description: "基于A*和RRT*的路径规划算法实现"
+    language: "Python"
+    stars: 128
+    forks: 23
+    updated: "2024-01-15"
+    
+  - name: "控制算法工具箱"
+    url: "https://github.com/Shen-Kirren/control-toolbox"
+    description: "PID、MPC等控制算法的实现和对比"
+    language: "C++"
+    stars: 89
+    forks: 15
+    updated: "2024-01-10"
+    
+  - name: "感知模块仿真"
+    url: "https://github.com/Shen-Kirren/perception-sim"
+    description: "基于ROS的感知模块仿真环境"
+    language: "Python"
+    stars: 56
+    forks: 12
+    updated: "2024-01-08"
+    
+  # 添加更多仓库...
+  # - name: "仓库名称"
+  #   url: "仓库链接"
+  #   description: "仓库描述"
+  #   language: "主要编程语言"
+  #   stars: 星标数
+  #   forks: Fork数
+  #   updated: "最后更新日期"

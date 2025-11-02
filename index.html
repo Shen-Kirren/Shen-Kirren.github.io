@@ -1,4 +1,526 @@
 ---
-layout: home
-# Index page
+layout: page
+title: 首页
+permalink: /
 ---
+
+<!-- 个人简介部分 -->
+<section id="about" class="home-section">
+  <h2 class="section-title">
+    <i class="fas fa-user"></i> 个人简介
+  </h2>
+  <div class="about-content">
+    <div class="about-text">
+      <h3>关于我</h3>
+      <p><strong>Shen-Kirren</strong>，一名自动驾驶工程师，专注于路径规划与控制（PNC）领域。</p>
+      
+      <h4>工作经历</h4>
+      <ul>
+        <li>曾在<strong>百度自动驾驶技术部（ADT）</strong>机器人出租车算法组工作 2 年，位于北京</li>
+        <li>目前在<strong>Deeproute.AI（北京）</strong>的 AI Safety 组工作</li>
+      </ul>
+      
+      <h4>博客目的</h4>
+      <ul>
+        <li>记录我的工作心得</li>
+        <li>分享我的学习成果</li>
+        <li>与更多人交流</li>
+      </ul>
+      
+      <p>欢迎访问我的博客，在这里你可以找到技术问题的答案，了解我的学习历程，也可以提出建议来完善这个博客。</p>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- 博客文章目录部分 -->
+<section id="posts-catalog" class="home-section">
+  <h2 class="section-title">
+    <i class="fas fa-list"></i> 博客文章目录
+  </h2>
+  
+  {% assign all_posts = site.posts | sort: 'date' | reverse %}
+  {% assign categories_data = site.data.categories.categories %}
+  
+  {% for category in categories_data %}
+  <div class="category-section">
+    <h3 class="category-title">
+      <i class="{{ category.icon }}"></i> {{ category.name }}
+      <small class="category-description">{{ category.description }}</small>
+    </h3>
+    
+    {% if category.subcategories %}
+      {% for subcategory in category.subcategories %}
+        {% assign category_posts = all_posts | where_exp: "post", "post.categories contains category.id or post.categories contains subcategory.id" %}
+        {% if category_posts.size > 0 %}
+          <h4 class="subcategory-title">{{ subcategory.name }}</h4>
+          
+          <!-- 按日期分组显示 -->
+          {% assign grouped_posts = category_posts | group_by_exp: "post", "post.date | date: '%Y年%m月'" %}
+          {% for group in grouped_posts %}
+            <div class="date-group">
+              <h5 class="date-title">{{ group.name }}</h5>
+              <ul class="post-list">
+                {% for post in group.items %}
+                  <li class="post-item">
+                    <a href="{{ post.url | relative_url }}" class="post-link">
+                      {{ post.title }}
+                    </a>
+                    <span class="post-date">{{ post.date | date: "%Y-%m-%d" }}</span>
+                    {% if post.tags.size > 0 %}
+                      <span class="post-tags">
+                        {% for tag in post.tags %}
+                          <span class="tag">{{ tag }}</span>
+                        {% endfor %}
+                      </span>
+                    {% endif %}
+                    {% if post.repository %}
+                      <a href="{{ post.repository }}" target="_blank" class="repo-link" title="相关代码仓库">
+                        <i class="fab fa-github"></i>
+                      </a>
+                    {% endif %}
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+    {% else %}
+      {% assign category_posts = all_posts | where_exp: "post", "post.categories contains category.id" %}
+      {% if category_posts.size > 0 %}
+        {% assign grouped_posts = category_posts | group_by_exp: "post", "post.date | date: '%Y年%m月'" %}
+        {% for group in grouped_posts %}
+          <div class="date-group">
+            <h5 class="date-title">{{ group.name }}</h5>
+            <ul class="post-list">
+              {% for post in group.items %}
+                <li class="post-item">
+                  <a href="{{ post.url | relative_url }}" class="post-link">
+                    {{ post.title }}
+                  </a>
+                  <span class="post-date">{{ post.date | date: "%Y-%m-%d" }}</span>
+                  {% if post.tags.size > 0 %}
+                    <span class="post-tags">
+                      {% for tag in post.tags %}
+                        <span class="tag">{{ tag }}</span>
+                      {% endfor %}
+                    </span>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endif %}
+  </div>
+  {% endfor %}
+  
+  {% if all_posts.size == 0 %}
+    <p class="no-posts">暂无文章，开始创作你的第一篇文章吧！</p>
+  {% endif %}
+</section>
+
+<hr class="section-divider">
+
+<!-- 热点代码仓库部分 -->
+<section id="repositories" class="home-section">
+  <h2 class="section-title">
+    <i class="fab fa-github"></i> 热点代码仓库
+  </h2>
+  
+  {% assign repos = site.data.repositories.repositories %}
+  {% if repos.size > 0 %}
+    <div class="repositories-grid">
+      {% for repo in repos %}
+        <div class="repo-card">
+          <div class="repo-header">
+            <h3 class="repo-name">
+              <a href="{{ repo.url }}" target="_blank">
+                <i class="fab fa-github"></i> {{ repo.name }}
+              </a>
+            </h3>
+          </div>
+          <p class="repo-description">{{ repo.description }}</p>
+          <div class="repo-meta">
+            <span class="repo-language">
+              <span class="language-dot"></span> {{ repo.language }}
+            </span>
+            <span class="repo-stats">
+              <i class="far fa-star"></i> {{ repo.stars }}
+              <i class="fas fa-code-branch"></i> {{ repo.forks }}
+            </span>
+          </div>
+          <div class="repo-footer">
+            <small>最后更新: {{ repo.updated }}</small>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="no-repos">暂无代码仓库信息，请在 <code>_data/repositories.yml</code> 中添加。</p>
+  {% endif %}
+</section>
+
+<hr class="section-divider">
+
+<!-- 评论和Issue部分 -->
+<section id="comments-issues" class="home-section">
+  <h2 class="section-title">
+    <i class="fas fa-comments"></i> 评论与讨论
+  </h2>
+  
+  <div class="comments-section">
+    <div class="comment-options">
+      <h3>博客评论</h3>
+      <p>你可以在每篇文章下方留下评论，或者直接在 GitHub 上创建 Issue 进行讨论。</p>
+      
+      <!-- Giscus 评论系统（如果已配置） -->
+      {% if site.comments.provider == 'giscus' %}
+        <div class="giscus-instructions">
+          <p>本博客使用 <strong>Giscus</strong> 进行评论，基于 GitHub Discussions。</p>
+          <p>你可以在每篇文章下方直接评论，评论会同步到 GitHub Discussions。</p>
+        </div>
+      {% endif %}
+      
+      <!-- Utterances 评论系统（如果已配置） -->
+      {% if site.comments.provider == 'utterances' %}
+        <div class="utterances-instructions">
+          <p>本博客使用 <strong>Utterances</strong> 进行评论，基于 GitHub Issues。</p>
+          <p>你可以在每篇文章下方直接评论，评论会创建对应的 GitHub Issue。</p>
+        </div>
+      {% endif %}
+      
+      {% unless site.comments.provider %}
+        <div class="no-comments">
+          <p>评论系统尚未配置。你可以：</p>
+          <ul>
+            <li>在 <code>_config.yml</code> 中配置 Giscus 或 Utterances</li>
+            <li>查看 <a href="https://giscus.app" target="_blank">Giscus</a> 或 <a href="https://utteranc.es" target="_blank">Utterances</a> 的配置文档</li>
+          </ul>
+        </div>
+      {% endunless %}
+    </div>
+    
+    <div class="github-issues">
+      <h3>GitHub Issues</h3>
+      <p>你也可以直接在仓库中创建 Issue 进行讨论：</p>
+      <a href="https://github.com/{{ site.github.username }}/{{ site.github.username }}.github.io/issues" 
+         target="_blank" 
+         class="github-issues-link">
+        <i class="fab fa-github"></i> 查看所有 Issues
+      </a>
+      <a href="https://github.com/{{ site.github.username }}/{{ site.github.username }}.github.io/issues/new" 
+         target="_blank" 
+         class="github-issues-link">
+        <i class="fas fa-plus"></i> 创建新 Issue
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+/* 首页自定义样式 */
+.home-section {
+  margin-bottom: 3rem;
+  padding: 2rem 0;
+}
+
+.section-title {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--tb-border-color, #e5e5e5);
+  color: var(--tb-theme-color, #0066cc);
+}
+
+.section-title i {
+  margin-right: 0.5rem;
+}
+
+.section-divider {
+  margin: 3rem 0;
+  border: none;
+  border-top: 1px solid var(--tb-border-color, #e5e5e5);
+}
+
+/* 个人简介样式 */
+.about-content {
+  line-height: 1.8;
+}
+
+.about-text h3 {
+  color: var(--tb-theme-color, #0066cc);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.about-text h4 {
+  margin-top: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.about-text ul {
+  margin-left: 1.5rem;
+}
+
+/* 文章目录样式 */
+.category-section {
+  margin-bottom: 2.5rem;
+}
+
+.category-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--tb-theme-color, #0066cc);
+}
+
+.category-description {
+  font-size: 0.9rem;
+  font-weight: normal;
+  color: var(--tb-meta-color, #6c757d);
+  margin-left: 0.5rem;
+}
+
+.subcategory-title {
+  font-size: 1.2rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.8rem;
+  color: var(--tb-text-color, #333);
+  font-weight: 600;
+}
+
+.date-group {
+  margin-bottom: 1.5rem;
+  margin-left: 1rem;
+}
+
+.date-title {
+  font-size: 1rem;
+  color: var(--tb-meta-color, #6c757d);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.post-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.post-item {
+  margin-bottom: 0.8rem;
+  padding: 0.5rem;
+  border-left: 3px solid var(--tb-border-color, #e5e5e5);
+  padding-left: 1rem;
+  transition: all 0.3s ease;
+}
+
+.post-item:hover {
+  border-left-color: var(--tb-theme-color, #0066cc);
+  background-color: var(--tb-bg-color, #f8f9fa);
+}
+
+.post-link {
+  font-weight: 500;
+  color: var(--tb-link-color, #0066cc);
+  text-decoration: none;
+}
+
+.post-link:hover {
+  text-decoration: underline;
+}
+
+.post-date {
+  margin-left: 1rem;
+  color: var(--tb-meta-color, #6c757d);
+  font-size: 0.9rem;
+}
+
+.post-tags {
+  margin-left: 1rem;
+}
+
+.tag {
+  display: inline-block;
+  background-color: var(--tb-bg-color, #f0f0f0);
+  color: var(--tb-text-color, #333);
+  padding: 0.2rem 0.5rem;
+  margin-right: 0.3rem;
+  border-radius: 3px;
+  font-size: 0.85rem;
+}
+
+.repo-link {
+  margin-left: 0.5rem;
+  color: var(--tb-meta-color, #6c757d);
+  text-decoration: none;
+}
+
+.repo-link:hover {
+  color: var(--tb-theme-color, #0066cc);
+}
+
+.no-posts, .no-repos {
+  text-align: center;
+  color: var(--tb-meta-color, #6c757d);
+  padding: 2rem;
+  background-color: var(--tb-bg-color, #f8f9fa);
+  border-radius: 5px;
+}
+
+/* 代码仓库样式 */
+.repositories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.repo-card {
+  border: 1px solid var(--tb-border-color, #e5e5e5);
+  border-radius: 8px;
+  padding: 1.5rem;
+  background-color: var(--tb-bg-color, #fff);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.repo-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.repo-header {
+  margin-bottom: 1rem;
+}
+
+.repo-name {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.repo-name a {
+  color: var(--tb-link-color, #0066cc);
+  text-decoration: none;
+}
+
+.repo-name a:hover {
+  text-decoration: underline;
+}
+
+.repo-description {
+  color: var(--tb-text-color, #333);
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.repo-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.repo-language {
+  display: flex;
+  align-items: center;
+  color: var(--tb-meta-color, #6c757d);
+}
+
+.language-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--tb-theme-color, #0066cc);
+  margin-right: 0.5rem;
+}
+
+.repo-stats {
+  color: var(--tb-meta-color, #6c757d);
+}
+
+.repo-stats i {
+  margin-right: 0.3rem;
+  margin-left: 0.8rem;
+}
+
+.repo-footer {
+  padding-top: 1rem;
+  border-top: 1px solid var(--tb-border-color, #e5e5e5);
+  color: var(--tb-meta-color, #6c757d);
+}
+
+/* 评论部分样式 */
+.comments-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.comment-options, .github-issues {
+  padding: 1.5rem;
+  background-color: var(--tb-bg-color, #f8f9fa);
+  border-radius: 8px;
+  border: 1px solid var(--tb-border-color, #e5e5e5);
+}
+
+.comment-options h3, .github-issues h3 {
+  margin-top: 0;
+  color: var(--tb-theme-color, #0066cc);
+}
+
+.github-issues-link {
+  display: inline-block;
+  margin-top: 1rem;
+  margin-right: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--tb-theme-color, #0066cc);
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.github-issues-link:hover {
+  background-color: var(--tb-hover-color, #0052a3);
+}
+
+.github-issues-link i {
+  margin-right: 0.5rem;
+}
+
+.no-comments ul {
+  margin-left: 1.5rem;
+}
+
+.no-comments code {
+  background-color: var(--tb-bg-color, #f0f0f0);
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.9rem;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .repositories-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .comments-section {
+    grid-template-columns: 1fr;
+  }
+  
+  .post-item {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .post-date, .post-tags {
+    margin-left: 0;
+    margin-top: 0.5rem;
+  }
+}
+</style>
